@@ -1,0 +1,40 @@
+why did your code is very long, I haven't enough time to read all.
+try simply code I saw
+
+package main
+
+import (
+	"golang.org/x/net/html"
+	"strings"
+	"fmt"
+
+)
+
+func main(){
+	strNote:=`abc<BR>1234</BR> 545, <H>ass</H> x32030`
+
+	domDocTest := html.NewTokenizer(strings.NewReader(strNote))
+	previousStartTokenTest := domDocTest.Token()
+loopDomTest:
+	for {
+		tt := domDocTest.Next()
+		switch {
+		case tt == html.ErrorToken:
+			break loopDomTest // End of the document,  done
+		case tt == html.StartTagToken:
+			previousStartTokenTest = domDocTest.Token()
+		case tt == html.TextToken:
+			if previousStartTokenTest.Data == "script" {
+				continue
+			}
+			TxtContent := strings.TrimSpace(html.UnescapeString(string(domDocTest.Text())))
+			if len(TxtContent) > 0 {
+				fmt.Printf("%s", TxtContent)
+			}
+		}
+	}
+
+}
+
+out put
+abc1234545,assx32030
